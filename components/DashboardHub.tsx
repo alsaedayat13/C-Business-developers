@@ -62,7 +62,7 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
       title: 'العمليات الأساسية',
       items: [
         { id: 'roadmap', label: 'خارطة الطريق', icon: '🗺️' },
-        { id: 'tasks', label: 'المخرجات الرقمية', icon: '📥' },
+        { id: 'tasks', label: 'المخرجات الرقمية', icon: '📝' },
         { id: 'profile', label: 'الملف الاستراتيجي', icon: '👤' },
       ]
     },
@@ -104,22 +104,22 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
 
   const getTaskStatusLabel = (status: TaskStatus) => {
     switch (status) {
-      case 'APPROVED': return 'مكتمل ومعتمد';
-      case 'SUBMITTED': return 'بانتظار المراجعة';
-      case 'REJECTED': return 'يحتاج تحديث';
-      case 'ASSIGNED': return 'جاهز للتنفيذ';
-      case 'LOCKED': return 'مرحلة مقفلة';
+      case 'APPROVED': return '✅ مكتمل ومعتمد';
+      case 'SUBMITTED': return '⏳ بانتظار المراجعة';
+      case 'REJECTED': return '❌ يحتاج تحديث';
+      case 'ASSIGNED': return '📋 جاهز للتنفيذ';
+      case 'LOCKED': return '🔒 مرحلة مقفلة';
       default: return status;
     }
   };
 
   const getStatusBadgeStyle = (status: TaskStatus) => {
     switch (status) {
-      case 'APPROVED': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
-      case 'SUBMITTED': return 'bg-blue-50 text-primary border-primary/20';
-      case 'REJECTED': return 'bg-rose-50 text-rose-600 border-rose-100 animate-pulse shadow-rose-100';
-      case 'ASSIGNED': return 'bg-slate-50 text-slate-600 border-slate-200';
-      case 'LOCKED': return 'bg-slate-50 text-slate-300 border-slate-100';
+      case 'APPROVED': return 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-[0_2px_10px_rgba(16,185,129,0.1)]';
+      case 'SUBMITTED': return 'bg-blue-50 text-blue-700 border-blue-200 shadow-[0_2px_10px_rgba(59,130,246,0.1)]';
+      case 'REJECTED': return 'bg-rose-50 text-rose-700 border-rose-200 animate-pulse shadow-[0_2px_10px_rgba(225,29,72,0.1)]';
+      case 'ASSIGNED': return 'bg-amber-50 text-amber-700 border-amber-200 shadow-[0_2px_10px_rgba(245,158,11,0.1)]';
+      case 'LOCKED': return 'bg-slate-100 text-slate-400 border-slate-200 opacity-60';
       default: return 'bg-slate-50 text-slate-400 border-slate-100';
     }
   };
@@ -291,9 +291,24 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                               
                               {/* Task Status Badge in Roadmap */}
                               {task && (
-                                <div className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border w-fit shadow-sm flex items-center gap-1.5 ${getStatusBadgeStyle(task.status)}`}>
-                                   <span className={`w-1.5 h-1.5 rounded-full ${task.status === 'APPROVED' ? 'bg-emerald-500' : task.status === 'REJECTED' ? 'bg-rose-500' : task.status === 'SUBMITTED' ? 'bg-primary' : 'bg-slate-400'}`}></span>
-                                   {getTaskStatusLabel(task.status)}
+                                <div className="space-y-3">
+                                  <div className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border w-fit shadow-sm flex items-center gap-2 ${getStatusBadgeStyle(task.status)}`}>
+                                     {getTaskStatusLabel(task.status)}
+                                  </div>
+                                  
+                                  {/* Milestone Progress Bar */}
+                                  <div className="w-full max-w-[140px] space-y-1.5 animate-reveal">
+                                    <div className="flex justify-between items-center px-0.5">
+                                      <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
+                                      <span className="text-[9px] font-black text-slate-900 tabular-nums">{getTaskProgress(task.status)}%</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200/50 shadow-inner">
+                                      <div 
+                                        className={`h-full transition-all duration-1000 ease-out ${getTaskStatusColorClass(task.status)}`}
+                                        style={{ width: `${getTaskProgress(task.status)}%` }}
+                                      ></div>
+                                    </div>
+                                  </div>
                                 </div>
                               )}
 
