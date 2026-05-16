@@ -25,8 +25,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, onRoadmap, on
               Institutional Venture Acceleration
             </span>
             <h1 className="text-[56px] font-bold text-slate-900 leading-[1.15] tracking-tight font-heading">
-              هندسة النمو <br/>
-              بمنظور سيادي فاخر.
+              صناعة الريادة <br/>
+              بمنظور فاخر.
             </h1>
             <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-2xl ml-auto">
               منصة احتضان وتسريع أعمال مبتكرة، صممت خصيصاً للمشاريع ذات الأثر الاستراتيجي، معتمدة على منهجية التحقق الرقمي المتقدمة لضمان الجاهزية الاستثمارية.

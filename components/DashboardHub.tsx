@@ -102,21 +102,44 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
     );
   }
 
+  const getTaskStatusLabel = (status: TaskStatus) => {
+    switch (status) {
+      case 'APPROVED': return 'مكتمل ومعتمد';
+      case 'SUBMITTED': return 'بانتظار المراجعة';
+      case 'REJECTED': return 'يحتاج تحديث';
+      case 'ASSIGNED': return 'جاهز للتنفيذ';
+      case 'LOCKED': return 'مرحلة مقفلة';
+      default: return status;
+    }
+  };
+
+  const getStatusBadgeStyle = (status: TaskStatus) => {
+    switch (status) {
+      case 'APPROVED': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+      case 'SUBMITTED': return 'bg-blue-50 text-primary border-primary/20';
+      case 'REJECTED': return 'bg-rose-50 text-rose-600 border-rose-100 animate-pulse shadow-rose-100';
+      case 'ASSIGNED': return 'bg-slate-50 text-slate-600 border-slate-200';
+      case 'LOCKED': return 'bg-slate-50 text-slate-300 border-slate-100';
+      default: return 'bg-slate-50 text-slate-400 border-slate-100';
+    }
+  };
+
   const getTaskProgress = (status: TaskStatus) => {
     switch (status) {
       case 'APPROVED': return 100;
-      case 'SUBMITTED': return 66;
-      case 'ASSIGNED': return 33;
+      case 'SUBMITTED': return 75;
+      case 'ASSIGNED': return 25;
       case 'REJECTED': return 50;
       default: return 0;
     }
   };
 
-  const getTaskStatusColor = (status: TaskStatus) => {
+  const getTaskStatusColorClass = (status: TaskStatus) => {
     switch (status) {
       case 'APPROVED': return 'bg-emerald-500';
-      case 'SUBMITTED': return 'bg-blue-500';
+      case 'SUBMITTED': return 'bg-primary';
       case 'REJECTED': return 'bg-rose-500';
+      case 'ASSIGNED': return 'bg-blue-400';
       default: return 'bg-slate-300';
     }
   };
@@ -130,7 +153,6 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
         className={`border-l border-slate-100 flex flex-col h-screen sticky top-0 bg-white/50 backdrop-blur-md z-50 transition-all duration-500 ease-in-out relative
         ${isSidebarCollapsed ? 'w-24' : 'w-80'}`}
       >
-        {/* Toggle Button */}
         <button 
           onClick={() => { setIsSidebarCollapsed(!isSidebarCollapsed); playPositiveSound(); }}
           className="absolute -left-4 top-12 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-[60]"
@@ -175,8 +197,6 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                     {!isSidebarCollapsed && (
                       <span className="text-sm font-bold truncate animate-fade-in">{item.label}</span>
                     )}
-                    
-                    {/* Collapsed Tooltip */}
                     {isSidebarCollapsed && (
                       <div className="absolute right-full mr-4 px-3 py-2 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-2xl z-50">
                         {item.label}
@@ -189,7 +209,7 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
           ))}
         </nav>
 
-        <div className={`p-6 border-t border-slate-100 bg-white/30 transition-all duration-500 ${isSidebarCollapsed ? 'px-3' : 'p-6'}`}>
+        <div className={`p-4 border-t border-slate-100 bg-white/30 transition-all duration-500 ${isSidebarCollapsed ? 'px-3' : 'p-6'}`}>
            <button 
              onClick={onLogout} 
              className={`w-full flex items-center gap-3 rounded-2xl transition-all font-black uppercase tracking-widest
@@ -229,7 +249,6 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                     </span>
                  </div>
               </div>
-              
               <div className="flex items-center gap-4 border-r border-slate-100 pr-10">
                  <div className="text-right">
                     <p className="text-sm font-black text-slate-900 leading-none">{user.firstName} {user.lastName}</p>
@@ -248,19 +267,19 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                   {roadmap.map((level) => {
                     const isLocked = level.isLocked;
                     const isCompleted = level.isCompleted;
+                    const task = tasks.find(t => t.levelId === level.id);
 
                     return (
                       <div 
                         key={level.id}
                         onClick={() => !isLocked && setSelectedLevel(level)}
-                        className={`p-10 flex flex-col justify-between min-h-[450px] transition-all relative overflow-hidden group
+                        className={`p-10 flex flex-col justify-between min-h-[480px] transition-all relative overflow-hidden group
                           ${isLocked 
                             ? 'opacity-50 grayscale bg-slate-50 border border-transparent cursor-not-allowed shadow-inner rounded-xl' 
                             : 'card-premium cursor-pointer'
                           }
                         `}
                       >
-                        {/* Status Ornament */}
                         {!isLocked && (
                           <div className={`absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-bl-[6rem] -z-0 transition-transform duration-700 group-hover:scale-125`}></div>
                         )}
@@ -269,6 +288,15 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                           <div className="flex justify-between items-start">
                             <div className="flex flex-col gap-3">
                               <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">المحطة 0{level.id}</span>
+                              
+                              {/* Task Status Badge in Roadmap */}
+                              {task && (
+                                <div className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border w-fit shadow-sm flex items-center gap-1.5 ${getStatusBadgeStyle(task.status)}`}>
+                                   <span className={`w-1.5 h-1.5 rounded-full ${task.status === 'APPROVED' ? 'bg-emerald-500' : task.status === 'REJECTED' ? 'bg-rose-500' : task.status === 'SUBMITTED' ? 'bg-primary' : 'bg-slate-400'}`}></span>
+                                   {getTaskStatusLabel(task.status)}
+                                </div>
+                              )}
+
                               {level.complexity && (
                                 <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full border w-fit shadow-sm flex items-center gap-1.5
                                   ${level.complexity === 'Elite' ? 'bg-rose-50 text-rose-600 border-rose-100' :
@@ -294,7 +322,6 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                             <p className="text-slate-500 text-sm font-medium leading-relaxed line-clamp-2">{level.description}</p>
                           </div>
 
-                          {/* Focus Pillars Preview */}
                           {level.pillars && level.pillars.length > 0 && !isLocked && (
                             <div className="space-y-2">
                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Focus Pillars</p>
@@ -324,13 +351,6 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Assets</p>
                                      <div className="flex items-center gap-2">
                                         <p className="text-xs font-black text-slate-700">{level.resources.length} ملفات ذكية</p>
-                                        <div className="flex -space-x-1.5 space-x-reverse">
-                                           {level.resources.slice(0, 3).map((res, ri) => (
-                                             <div key={ri} className="w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[8px] shadow-sm" title={res.title}>
-                                               {res.type === 'PDF' ? '📄' : res.type === 'VIDEO' ? '🎥' : '📝'}
-                                             </div>
-                                           ))}
-                                        </div>
                                      </div>
                                   </div>
                                </div>
@@ -368,45 +388,62 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                 <div className="grid grid-cols-1 gap-10">
                   {tasks.length > 0 ? tasks.map(task => {
                     const progress = getTaskProgress(task.status);
-                    const statusColor = getTaskStatusColor(task.status);
+                    const statusColor = getTaskStatusColorClass(task.status);
+                    const level = roadmap.find(l => l.id === task.levelId);
                     
                     return (
-                      <div key={task.id} className="p-10 rounded-xl bg-white border border-slate-200 hover:border-primary shadow-xl shadow-slate-100/50 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-[4rem] group-hover:scale-110 transition-transform"></div>
+                      <div key={task.id} className="p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-primary/30 shadow-2xl shadow-slate-100/30 transition-all group relative overflow-hidden">
+                        <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-[6rem] opacity-5 -z-0 transition-transform duration-700 group-hover:scale-110 ${statusColor}`}></div>
                         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-12 relative z-10">
-                          <div className="space-y-4 flex-1">
-                            <div className="flex items-center gap-4">
-                              <span className="px-4 py-1.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">مخرج 0{task.levelId}</span>
-                              {task.status === 'REJECTED' && (
-                                <span className="px-4 py-1.5 bg-rose-50 text-rose-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-rose-100 animate-pulse">تحديث مطلوب</span>
-                              )}
+                          <div className="space-y-6 flex-1">
+                            <div className="flex flex-wrap items-center gap-3">
+                              <span className="px-5 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2">
+                                {level && <span className="text-sm">{level.icon}</span>}
+                                Milestone 0{task.levelId}
+                              </span>
+                              
+                              {/* Task Status Badge in Tasks Tab */}
+                              <span className={`px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${getStatusBadgeStyle(task.status)}`}>
+                                {getTaskStatusLabel(task.status)}
+                              </span>
                             </div>
-                            <h4 className="text-2xl font-black text-slate-900 font-heading tracking-tight">{task.title}</h4>
-                            <p className="text-base text-slate-500 font-medium leading-relaxed line-clamp-1 italic max-w-2xl">"{task.description}"</p>
+                            <div>
+                               <h4 className="text-3xl font-black text-slate-900 font-heading tracking-tight mb-2">{task.title}</h4>
+                               <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-2xl">"{task.description}"</p>
+                            </div>
                           </div>
 
-                          <div className="w-full lg:w-80 space-y-5">
-                             <div className="flex justify-between items-center">
-                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">تتبع سير المخرج الاستراتيجي</p>
-                               <p className="text-sm font-black text-slate-900 tabular-nums">{progress}%</p>
+                          <div className="w-full lg:w-[400px] space-y-6 bg-slate-50/50 p-8 rounded-[2rem] border border-slate-100 shadow-inner">
+                             <div className="flex justify-between items-center px-1">
+                               <div className="space-y-1">
+                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">معدل الإنجاز الاستراتيجي</p>
+                                  <p className="text-xs font-bold text-primary">Strategic Maturity Index</p>
+                               </div>
+                               <p className="text-4xl font-black text-slate-900 tabular-nums">{progress}%</p>
                              </div>
                              
-                             {/* Pipeline Visualizer */}
                              <div className="relative pt-2">
-                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                                <div className="h-4 w-full bg-white rounded-full overflow-hidden shadow-inner border border-slate-200">
                                    <div 
-                                     className={`h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)] ${statusColor}`}
+                                     className={`h-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(0,0,0,0.1)] ${statusColor}`}
                                      style={{ width: `${progress}%` }}
                                    ></div>
                                 </div>
-                                <div className="flex justify-between mt-4">
+                                <div className="flex justify-between mt-6">
                                    {['تعيين', 'تسليم', 'تدقيق', 'اعتماد'].map((step, idx) => {
-                                      const stepProgress = (idx + 1) * 25;
-                                      const isActive = progress >= stepProgress;
+                                      const stepThreshold = (idx + 1) * 25;
+                                      const isReached = progress >= stepThreshold;
+                                      const isCurrent = (progress >= stepThreshold - 25 && progress < stepThreshold) || (idx === 3 && progress === 100);
+                                      
                                       return (
-                                        <div key={step} className="flex flex-col items-center gap-2">
-                                           <div className={`w-3 h-3 rounded-full border-2 transition-all duration-500 ${isActive ? (statusColor + ' border-white shadow-md scale-125') : 'bg-white border-slate-200'}`}></div>
-                                           <span className={`text-[8px] font-black uppercase tracking-tighter transition-colors ${isActive ? 'text-slate-900' : 'text-slate-300'}`}>{step}</span>
+                                        <div key={step} className="flex flex-col items-center gap-3">
+                                           <div className={`w-6 h-6 rounded-full border-4 flex items-center justify-center transition-all duration-700 
+                                             ${isReached ? (statusColor + ' border-white shadow-xl scale-125') : 'bg-white border-slate-100'}
+                                             ${isCurrent ? 'ring-4 ring-primary/10' : ''}
+                                           `}>
+                                              {isReached && <span className="text-[10px] text-white font-black">✓</span>}
+                                           </div>
+                                           <span className={`text-[10px] font-black uppercase tracking-widest transition-colors duration-500 ${isReached ? 'text-slate-900' : 'text-slate-300'}`}>{step}</span>
                                         </div>
                                       )
                                    })}
@@ -414,22 +451,28 @@ export const DashboardHub: React.FC<DashboardHubProps> = ({ user, onLogout }) =>
                              </div>
                           </div>
 
-                          <button 
-                            onClick={() => !selectedLevel && task.status !== 'APPROVED' && setSelectedLevel(roadmap.find(l => l.id === task.levelId) || null)}
-                            className={`px-10 py-5 rounded-xl font-black text-sm transition-all shrink-0 shadow-2xl active:scale-95
-                              ${task.status === 'APPROVED' 
-                                ? 'bg-emerald-50 text-emerald-600 cursor-default border border-emerald-100' 
-                                : 'bg-slate-900 text-white hover:bg-primary shadow-slate-900/10'}
-                            `}
-                          >
-                            {task.status === 'SUBMITTED' ? 'قيد المراجعة...' : task.status === 'APPROVED' ? 'تم الاعتماد' : (task.status === 'REJECTED' ? 'إعادة الرفع ↺' : 'رفع المخرج')}
-                          </button>
+                          <div className="flex flex-col gap-3 shrink-0">
+                            <button 
+                              onClick={() => !selectedLevel && task.status !== 'APPROVED' && setSelectedLevel(roadmap.find(l => l.id === task.levelId) || null)}
+                              disabled={task.status === 'APPROVED' || task.status === 'SUBMITTED'}
+                              className={`px-12 py-6 rounded-[1.8rem] font-black text-lg transition-all shadow-2xl active:scale-95 flex items-center justify-center gap-4
+                                ${task.status === 'APPROVED' 
+                                  ? 'bg-emerald-50 text-emerald-600 cursor-default border border-emerald-100 shadow-none' 
+                                  : task.status === 'SUBMITTED' ? 'bg-slate-100 text-slate-400 border border-slate-200 shadow-none cursor-wait' :
+                                  'bg-slate-950 text-white hover:bg-primary shadow-slate-950/20'}
+                              `}
+                            >
+                              <span>{task.status === 'SUBMITTED' ? 'قيد التدقيق الرقمي' : task.status === 'APPROVED' ? 'المخرج معتمد' : (task.status === 'REJECTED' ? 'إعادة الإرسال ↺' : 'بدء التسليم')}</span>
+                              {task.status === 'ASSIGNED' && <span className="text-2xl">📤</span>}
+                              {task.status === 'APPROVED' && <span className="text-2xl">✅</span>}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
                   }) : (
                     <div className="py-48 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-[4rem] opacity-40">
-                       <span className="text-8xl mb-8 block">📥</span>
+                       <span className="text-8xl mb-8 block grayscale">📥</span>
                        <h3 className="text-3xl font-black text-slate-900">بانتظار مخرجاتك الأولى</h3>
                        <p className="text-xl font-medium mt-4">ابدأ بملء "خارطة الطريق" لتظهر مخرجاتك هنا للتدقيق.</p>
                     </div>

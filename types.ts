@@ -77,7 +77,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     id: 1, 
     title: 'استراتيجية التوسع العالمي', 
     description: 'تحديد الأسواق الجديدة والفرص المستقبلية باستخدام بيانات السوق المتقدمة', 
-    icon: '🌐', 
+    icon: '🗺️', 
     imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600', 
     isLocked: false, 
     isCompleted: false, 
@@ -90,7 +90,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     ],
     resources: [
       { title: 'دليل التحقق من الفكرة', type: 'PDF', url: '#' },
-      { title: 'فيديو: هندسة المقابلات', type: 'VIDEO', url: '#' }
+      { title: 'فيديو: بروتوكول المقابلات', type: 'VIDEO', url: '#' }
     ]
   },
   { 
@@ -106,7 +106,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     estimatedTime: '٦ ساعات',
     pillars: [
       { title: 'مصفوفة القيمة', description: 'تأصيل السبب وراء دفع العميل للمال.', icon: '⚖️' },
-      { title: 'هندسة التدفقات', description: 'رسم مسار السيولة من العميل للكيان.', icon: '💧' }
+      { title: 'عمارة التدفقات', description: 'رسم مسار السيولة من العميل للكيان.', icon: '💧' }
     ],
     resources: [
       { title: 'قالب BMC المطور', type: 'DOC', url: '#' },
@@ -117,7 +117,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     id: 3, 
     title: 'رادار السوق التنافسي', 
     description: 'تحليل دقيق للمنافسين وتحديد الميزة التنافسية الجوهرية لضمان التفوق.', 
-    icon: '🛰️', 
+    icon: '📡', 
     imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600', 
     isLocked: false, 
     isCompleted: false, 
@@ -145,11 +145,11 @@ export const INITIAL_ROADMAP: LevelData[] = [
     complexity: 'Medium',
     estimatedTime: '٥ ساعات',
     pillars: [
-      { title: 'هندسة المنتج', description: 'تحديد الخصائص الجوهرية للإطلاق.', icon: '📊' },
+      { title: 'صناعة المنتج', description: 'تحديد الخصائص الجوهرية للإطلاق.', icon: '📊' },
       { title: 'تجربة المستخدم', description: 'تصميم رحلة عميل سلسة ومنطقية.', icon: '📡' }
     ],
     resources: [
-      { title: 'دليل هندسة الـ MVP', type: 'PDF', url: '#' },
+      { title: 'دليل صناعة الـ MVP', type: 'PDF', url: '#' },
       { title: 'قالب رحلة المستخدم', type: 'DOC', url: '#' }
     ]
   },
@@ -157,7 +157,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     id: 5, 
     title: 'النمذجة المالية', 
     description: 'إعداد قوائم التدفقات النقدية، تقييم المشروع، وجاهزية الجولة الاستثمارية.', 
-    icon: '💹', 
+    icon: '📊', 
     imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=600', 
     isLocked: false, 
     isCompleted: false, 
@@ -177,7 +177,7 @@ export const INITIAL_ROADMAP: LevelData[] = [
     id: 6, 
     title: 'يوم العرض والاعتماد', 
     description: 'العرض النهائي أمام لجنة المستثمرين وقرار المسار المؤسسي النهائي للكيان.', 
-    icon: '🏆', 
+    icon: '🎓', 
     imageUrl: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=600', 
     isLocked: false, 
     isCompleted: false, 
@@ -543,7 +543,7 @@ export const TASKS_CONFIG = [
   { title: 'تحليل الفجوات' },
   { title: 'بروتوكول المقابلات' },
   { title: 'مصفوفة القيمة' },
-  { title: 'هندسة التدفقات' },
+  { title: 'عمارة التدفقات' },
   { title: 'تحليل المنافسين' },
   { title: 'الميزة الاستراتيجية' }
 ];

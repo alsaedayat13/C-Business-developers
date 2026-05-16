@@ -18,7 +18,7 @@ export const GlobalFooter: React.FC<GlobalFooterProps> = ({ lang }) => {
           <div className="col-span-1 space-y-6">
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-widest">{t.brand}</h4>
             <p className="text-slate-500 text-[11px] leading-relaxed font-medium">
-              نظام رائد لبناء وتطوير المشاريع الناشئة بمعايير مؤسسية سيادية، مدعوماً بالذكاء الاصطناعي الاستراتيجي.
+              نظام رائد لبناء وتطوير المشاريع الناشئة بمعايير مؤسسية رفيعة، مدعوماً بالذكاء الاصطناعي الاستراتيجي.
             </p>
           </div>
 
